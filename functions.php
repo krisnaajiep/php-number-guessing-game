@@ -73,7 +73,7 @@ function play(): string
 
   $result = guess(intval($guess), $number, $chances, $attempts);
 
-  if (isset($result[1])) {
+  if (is_array($result) && isset($result[1])) {
     $endTime = $result[1];
     $time = gmdate('H:i:s', ($endTime - $startTime));
 

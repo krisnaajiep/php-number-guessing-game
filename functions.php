@@ -33,13 +33,22 @@ function guess(int $guess, int $number, int $chances, int $attempts): array|stri
     return ["Congratulations! You guessed the correct number in $attempts attempts.\n", time()];
   } else {
     if ($attempts < $chances) {
+      if ((60 * $chances) / 100  <= $attempts) {
+        $numRange = strlen(strval($number)) > 1
+          ? strval($number)[0] . '0-' . strval($number)[0] . '9'
+          : '0-9';
+        $hint = "Hint: the number is beetween $numRange\n";
+      } else {
+        $hint = '';
+      }
+
       switch (true) {
         case $guess > $number:
-          echo "Incorrect! The number is less than $guess.\n\n";
+          echo "Incorrect! The number is less than $guess.\n$hint\n";
           break;
 
         case $guess < $number:
-          echo "Incorrect! The number is greater than $guess.\n\n";
+          echo "Incorrect! The number is greater than $guess.\n$hint\n";
           break;
       }
 

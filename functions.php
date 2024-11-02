@@ -24,13 +24,13 @@ function choice(): array
       break;
   }
 
-  return ["Great! You have selected the $difficulty difficulty level.\nLet's start the game!\n\n", $difficulty];
+  return ["Great! You have selected the $difficulty difficulty level.\nLet's start the game!\n\n", $difficulty, time()];
 }
 
-function guess(int $guess, int $number, int $chances, int $attempts): string
+function guess(int $guess, int $number, int $chances, int $attempts): array|string
 {
   if ($guess == $number) {
-    return "Congratulations! You guessed the correct number in $attempts attempts.\n\n";
+    return ["Congratulations! You guessed the correct number in $attempts attempts.\n", time()];
   } else {
     if ($attempts < $chances) {
       switch (true) {
@@ -48,7 +48,7 @@ function guess(int $guess, int $number, int $chances, int $attempts): string
 
       return guess(intval($guess), $number, $chances, $attempts);
     } else {
-      return "Chances is over. The correct number is $number.\n\n";
+      return ["Chances is over. The correct number is $number.\n\n"];
     }
   }
 }
@@ -64,13 +64,18 @@ function play(): string
   $choice = choice();
   echo $choice[0];
   $difficulty = $choice[1];
+  $startTime = $choice[2];
 
   $guess = readline('Enter your guess: ');
 
   $chances = $difficulty == 'Easy' ? 10 : ($difficulty == 'Medium' ? 5 : 3);
   $attempts = 1;
 
-  echo guess(intval($guess), $number, $chances, $attempts);
+  $result = guess(intval($guess), $number, $chances, $attempts);
+  $endTime = $result[1];
+  $time = gmdate('H:i:s', ($endTime - $startTime));
+
+  echo $result[0] . "Time: $time\n\n";
 
   $replay = readline("Want to play again? [y/n]");
 

@@ -48,7 +48,7 @@ function guess(int $guess, int $number, int $chances, int $attempts): array|stri
 
       return guess(intval($guess), $number, $chances, $attempts);
     } else {
-      return ["Chances is over. The correct number is $number.\n\n"];
+      return "Chances is over. The correct number is $number.\n\n";
     }
   }
 }
@@ -79,7 +79,7 @@ function play(): string
 
     echo $result[0] . "Time: $time\n\n";
   } else {
-    echo $result[0];
+    echo $result;
   }
 
   $replay = readline("Want to play again? [y/n]");

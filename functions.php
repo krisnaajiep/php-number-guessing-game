@@ -72,10 +72,15 @@ function play(): string
   $attempts = 1;
 
   $result = guess(intval($guess), $number, $chances, $attempts);
-  $endTime = $result[1];
-  $time = gmdate('H:i:s', ($endTime - $startTime));
 
-  echo $result[0] . "Time: $time\n\n";
+  if (isset($result[1])) {
+    $endTime = $result[1];
+    $time = gmdate('H:i:s', ($endTime - $startTime));
+
+    echo $result[0] . "Time: $time\n\n";
+  } else {
+    echo $result[0];
+  }
 
   $replay = readline("Want to play again? [y/n]");
 

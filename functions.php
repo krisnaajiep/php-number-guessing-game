@@ -30,7 +30,11 @@ function choice(): array
 function guess(int $guess, int $number, int $chances, int $attempts): array|string
 {
   if ($guess == $number) {
-    return ["Congratulations! You guessed the correct number in $attempts attempts.\n", time()];
+    return [
+      'message' => "Congratulations! You guessed the correct number in $attempts attempts.\n",
+      'endTime' => time(),
+      'attempts' => $attempts,
+    ];
   } else {
     if ($attempts < $chances) {
       if ((60 * $chances) / 100  <= $attempts) {
@@ -62,7 +66,7 @@ function guess(int $guess, int $number, int $chances, int $attempts): array|stri
   }
 }
 
-function play(): string
+function play(int $highestScore = 10): string
 {
   echo "\nWelcome to the Number Guessing Game!\nI'm thinking of a number between 1 and 100.\nYou have 5 chances to guess the correct number.\n\n";
 
@@ -82,16 +86,19 @@ function play(): string
 
   $result = guess(intval($guess), $number, $chances, $attempts);
 
-  if (is_array($result) && isset($result[1])) {
-    $endTime = $result[1];
+  if (is_array($result) && isset($result['endTime'])) {
+    $endTime = $result['endTime'];
     $time = gmdate('H:i:s', ($endTime - $startTime));
 
-    echo $result[0] . "Time: $time\n\n";
+    if ($highestScore > $result['attempts'])
+      $highestScore = $result['attempts'];
+
+    echo $result['message'] . "Time: $time\nHighest score: $highestScore attempts\n\n";
   } else {
     echo $result;
   }
 
   $replay = readline("Want to play again? [y/n]");
 
-  return $replay == 'y' ? play() : "\nThank you for playing.";
+  return $replay == 'y' ? play($highestScore) : "\nThank you for playing.";
 }

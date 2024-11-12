@@ -24,7 +24,11 @@ function choice(): array
       break;
   }
 
-  return ["Great! You have selected the $difficulty difficulty level.\nLet's start the game!\n\n", $difficulty, time()];
+  return [
+    'message' => "Great! You have selected the $difficulty difficulty level.\nLet's start the game!\n\n",
+    'difficulty' => $difficulty,
+    'startTime' => time()
+  ];
 }
 
 function guess(int $guess, int $number, int $chances, int $attempts): array|string
@@ -38,9 +42,11 @@ function guess(int $guess, int $number, int $chances, int $attempts): array|stri
   } else {
     if ($attempts < $chances) {
       if ((60 * $chances) / 100  <= $attempts) {
-        $numRange = strlen(strval($number)) > 1
+        $numRange = strlen(strval($number)) > 1 && strlen(strval($number)) < 90
           ? strval($number)[0] . '0-' . strval($number)[0] . '9'
-          : '0-9';
+          : (strlen(strval($number)) >= 90
+            ? '90-100'
+            : '0-9');
         $hint = "Hint: the number is beetween $numRange\n";
       } else {
         $hint = '';
@@ -68,6 +74,8 @@ function guess(int $guess, int $number, int $chances, int $attempts): array|stri
 
 function play(int $highestScore = 10): string
 {
+  $scores = json_decode(file_get_contents('attempts.json'), true);
+
   echo "\nWelcome to the Number Guessing Game!\nI'm thinking of a number between 1 and 100.\nYou have 5 chances to guess the correct number.\n\n";
 
   $number = rand(1, 100);
@@ -75,9 +83,9 @@ function play(int $highestScore = 10): string
   echo "Please select the difficulty level:\n1. Easy (10 chances)\n2. Medium (5 chances)\n3. Hard (3 chances)\n\n";
 
   $choice = choice();
-  echo $choice[0];
-  $difficulty = $choice[1];
-  $startTime = $choice[2];
+  echo $choice['message'];
+  $difficulty = $choice['difficulty'];
+  $startTime = $choice['startTime'];
 
   $guess = readline('Enter your guess: ');
 
@@ -90,10 +98,12 @@ function play(int $highestScore = 10): string
     $endTime = $result['endTime'];
     $time = gmdate('H:i:s', ($endTime - $startTime));
 
-    if ($highestScore > $result['attempts'])
-      $highestScore = $result['attempts'];
+    if ($scores[$difficulty] > $result['attempts']) {
+      $scores[$difficulty] = $result['attempts'];
+      file_put_contents('attempts.json', json_encode($scores, JSON_PRETTY_PRINT));
+    }
 
-    echo $result['message'] . "Time: $time\nHighest score: $highestScore attempts\n\n";
+    echo $result['message'] . "Time: $time\nHighest score: {$scores[$difficulty]} attempts ($difficulty)\n\n";
   } else {
     echo $result;
   }

@@ -9,4 +9,6 @@ $number = rand(1, 100);
 echo "\nPlease select the difficulty level:\n1. Easy (10 chances)\n2. Medium (5 chances)\n3. Hard (3 chances)\n\n";
 
 $difficulty = difficulty();
-echo "Great! You have selected the $difficulty difficulty level.\nLet's start the game!\n";
+echo "Great! You have selected the $difficulty difficulty level.\nLet's start the game!\n\n";
+
+$guess = readline('Enter your guess: ');

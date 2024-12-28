@@ -26,3 +26,29 @@ function difficulty(): string
 
   return $difficulty;
 }
+
+function guess(int $guess, int $number, int $chances, int $attempts): int|null
+{
+  if ($guess == $number) {
+    return $attempts;
+  } else {
+    if ($attempts < $chances) {
+      switch (true) {
+        case $guess > $number:
+          echo "Incorrect! The number is less than $guess.\n\n";
+          break;
+
+        case $guess < $number:
+          echo "Incorrect! The number is greater than $guess.\n\n";
+          break;
+      }
+
+      $guess = readline('Enter your guess: ');
+      $attempts++;
+
+      return guess(intval($guess), $number, $chances, $attempts);
+    } else {
+      return null;
+    }
+  }
+}

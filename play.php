@@ -11,15 +11,9 @@ echo "\nPlease select the difficulty level:\n1. Easy (10 chances)\n2. Medium (5 
 $difficulty = difficulty();
 echo "Great! You have selected the $difficulty difficulty level.\nLet's start the game!\n\n";
 
-$guess = readline('Enter your guess: ');
-
 $chances = $difficulty == 'Easy' ? 10 : ($difficulty == 'Medium' ? 5 : 3);
 $attempts = 1;
 
-$result = guess(intval($guess), $number, $chances, $attempts);
+$guess = readline('Enter your guess: ');
 
-if (!is_null($result)) {
-  echo "Congratulations! You guessed the correct number in $result attempts.\n\n";
-} else {
-  echo "Chances is over. The correct number is $number.\n\n";
-}
+echo guess(intval($guess), $number, $chances, $attempts);

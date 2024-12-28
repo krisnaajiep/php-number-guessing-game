@@ -27,10 +27,10 @@ function difficulty(): string
   return $difficulty;
 }
 
-function guess(int $guess, int $number, int $chances, int $attempts): int|null
+function guess(int $guess, int $number, int $chances, int $attempts): string
 {
   if ($guess == $number) {
-    return $attempts;
+    echo "Congratulations! You guessed the correct number in $attempts attempts.\n\n";
   } else {
     if ($attempts < $chances) {
       switch (true) {
@@ -48,7 +48,24 @@ function guess(int $guess, int $number, int $chances, int $attempts): int|null
 
       return guess(intval($guess), $number, $chances, $attempts);
     } else {
-      return null;
+      echo "Chances is over. The correct number is $number.\n\n";
     }
+  }
+
+  if (!replay($chances)) return "\nThank you for playing.\n\n";
+}
+
+function replay(int $chances)
+{
+  $replay = readline("Want to play again? [y/n]");
+
+  if ($replay == 'y') {
+    echo "\n";
+    $number = rand(1, 100);
+    $attempts = 1;
+    $guess = readline('Enter your guess: ');
+    guess(intval($guess), $number, $chances, $attempts);
+  } else {
+    return false;
   }
 }

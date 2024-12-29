@@ -2,6 +2,19 @@
 
 require_once 'functions.php';
 
+if (
+  !file_exists('attempts.json') ||
+  is_null(json_decode(file_get_contents('attempts.json'), true))
+) {
+  $data = json_encode([
+    'Easy' => 10,
+    'Medium' => 5,
+    'Hard' => 3,
+  ], JSON_PRETTY_PRINT);
+
+  file_put_contents('attempts.json', $data);
+}
+
 echo "\nWelcome to the Number Guessing Game!\nI'm thinking of a number between 1 and 100.\nYou have 5 chances to guess the correct number.\n";
 
 $number = rand(1, 100);
@@ -16,4 +29,4 @@ $attempts = 1;
 $startTime = time();
 $guess = readline('Enter your guess: ');
 
-echo guess(intval($guess), $number, $chances, $attempts, $startTime);
+echo guess(intval($guess), $number, $chances, $attempts, $startTime, $difficulty);

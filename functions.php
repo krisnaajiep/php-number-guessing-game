@@ -27,13 +27,21 @@ function difficulty(): string
   return $difficulty;
 }
 
-function guess(int $guess, int $number, int $chances, int $attempts, int $startTime): string
+function guess(int $guess, int $number, int $chances, int $attempts, int $startTime, string $difficulty): string
 {
+  $scores = json_decode(file_get_contents('attempts.json'), true);
+
   if ($guess == $number) {
     echo "Congratulations! You guessed the correct number in $attempts attempts.\n";
     $endTime = time();
     $time = gmdate('H:i:s', ($endTime - $startTime));
-    echo "Time: $time\n\n";
+
+    if ($scores[$difficulty] > $attempts) {
+      $scores[$difficulty] = $attempts;
+      file_put_contents('attempts.json', json_encode($scores, JSON_PRETTY_PRINT));
+    }
+
+    echo "Time: $time\nHighest score: {$scores[$difficulty]} attempts ($difficulty)\n\n";
   } else {
     if ($attempts < $chances) {
       if ((60 * $chances) / 100  <= $attempts) {
@@ -62,16 +70,16 @@ function guess(int $guess, int $number, int $chances, int $attempts, int $startT
       $guess = readline('Enter your guess: ');
       $attempts++;
 
-      return guess(intval($guess), $number, $chances, $attempts, $startTime);
+      return guess(intval($guess), $number, $chances, $attempts, $startTime, $difficulty);
     } else {
       echo "Chances is over. The correct number is $number.\n\n";
     }
   }
 
-  if (!replay($chances)) return "\nThank you for playing.\n\n";
+  if (!replay($chances, $difficulty)) return "\nThank you for playing.\n\n";
 }
 
-function replay(int $chances)
+function replay(int $chances, string $difficulty)
 {
   $replay = readline("Want to play again? [y/n]");
 
@@ -81,7 +89,7 @@ function replay(int $chances)
     $attempts = 1;
     $startTime = time();
     $guess = readline('Enter your guess: ');
-    guess(intval($guess), $number, $chances, $attempts, $startTime);
+    guess(intval($guess), $number, $chances, $attempts, $startTime, $difficulty);
   } else {
     return false;
   }

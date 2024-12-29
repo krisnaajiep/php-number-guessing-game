@@ -13,7 +13,7 @@ echo "Great! You have selected the $difficulty difficulty level.\nLet's start th
 
 $chances = $difficulty == 'Easy' ? 10 : ($difficulty == 'Medium' ? 5 : 3);
 $attempts = 1;
-
+$startTime = time();
 $guess = readline('Enter your guess: ');
 
-echo guess(intval($guess), $number, $chances, $attempts);
+echo guess(intval($guess), $number, $chances, $attempts, $startTime);

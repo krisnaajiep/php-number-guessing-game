@@ -27,10 +27,13 @@ function difficulty(): string
   return $difficulty;
 }
 
-function guess(int $guess, int $number, int $chances, int $attempts): string
+function guess(int $guess, int $number, int $chances, int $attempts, int $startTime): string
 {
   if ($guess == $number) {
-    echo "Congratulations! You guessed the correct number in $attempts attempts.\n\n";
+    echo "Congratulations! You guessed the correct number in $attempts attempts.\n";
+    $endTime = time();
+    $time = gmdate('H:i:s', ($endTime - $startTime));
+    echo "Time: $time\n\n";
   } else {
     if ($attempts < $chances) {
       switch (true) {
@@ -46,7 +49,7 @@ function guess(int $guess, int $number, int $chances, int $attempts): string
       $guess = readline('Enter your guess: ');
       $attempts++;
 
-      return guess(intval($guess), $number, $chances, $attempts);
+      return guess(intval($guess), $number, $chances, $attempts, $startTime);
     } else {
       echo "Chances is over. The correct number is $number.\n\n";
     }
@@ -63,8 +66,9 @@ function replay(int $chances)
     echo "\n";
     $number = rand(1, 100);
     $attempts = 1;
+    $startTime = time();
     $guess = readline('Enter your guess: ');
-    guess(intval($guess), $number, $chances, $attempts);
+    guess(intval($guess), $number, $chances, $attempts, $startTime);
   } else {
     return false;
   }

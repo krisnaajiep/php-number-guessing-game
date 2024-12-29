@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * Prompts the user to select a difficulty level and validates the input.
+ *
+ * @return string The selected difficulty level as a string ('Easy', 'Medium', 'Hard').
+ */
 function difficulty(): string
 {
   $difficultyLevel = readline('Enter your choice: ');
@@ -27,6 +32,17 @@ function difficulty(): string
   return $difficulty;
 }
 
+/**
+ * Handles the number-guessing game logic, including attempts, hints, and scoring.
+ *
+ * @param integer $guess The user's current guess.
+ * @param integer $number The correct number to guess.
+ * @param integer $chances Total chances available to the player.
+ * @param integer $attempts The number of attempts made so far.
+ * @param integer $startTime The timestamp when the game started (used to calculate time taken).
+ * @param string $difficulty The difficulty level of the game ('Easy', 'Medium', 'Hard').
+ * @return string A message summarizing the result or ending the game.
+ */
 function guess(int $guess, int $number, int $chances, int $attempts, int $startTime, string $difficulty): string
 {
   $scores = json_decode(file_get_contents('attempts.json'), true);
@@ -79,6 +95,14 @@ function guess(int $guess, int $number, int $chances, int $attempts, int $startT
   if (!replay($chances, $difficulty)) return "\nThank you for playing.\n\n";
 }
 
+/**
+ * Handles the replay logic for the number-guessing game.
+ *
+ * @param integer $chances The total number of chances available for a new game.
+ * @param string $difficulty The difficulty level of the game ('Easy', 'Medium', 'Hard').
+ * @return void Returns `false` to end the game if the user chooses not to replay.
+ *              If the user chooses to replay, a new game session is initiated.
+ */
 function replay(int $chances, string $difficulty)
 {
   $replay = readline("Want to play again? [y/n]");
